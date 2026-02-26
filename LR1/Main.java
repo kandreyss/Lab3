@@ -12,5 +12,10 @@ public class Main {
 		}
 		a.substract(b);
 		System.out.println(a);
+
+		Int number = new Int(2);
+		Int base = new Int(3);
+		number.pow(base);
+		System.out.println(number);
     }
 }
