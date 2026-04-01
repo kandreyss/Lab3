@@ -1,7 +1,7 @@
 /home/kandreys/Projects/Java/Lab3/LR5/src/main/java/org/suai/lab05/App.java
 /home/kandreys/Projects/Java/Lab3/LR5/src/main/java/org/suai/lab05/matrices/AbstractMatrix.java
 /home/kandreys/Projects/Java/Lab3/LR5/src/main/java/org/suai/lab05/matrices/IMatrix.java
-/home/kandreys/Projects/Java/Lab3/LR5/src/main/java/org/suai/lab05/matrices/SparceMatrix.java
+/home/kandreys/Projects/Java/Lab3/LR5/src/main/java/org/suai/lab05/matrices/SparseMatrix.java
 /home/kandreys/Projects/Java/Lab3/LR5/src/main/java/org/suai/lab05/matrices/SquareMatrix.java
 /home/kandreys/Projects/Java/Lab3/LR5/src/main/java/org/suai/lab05/matrices/UsualMatrix.java
 /home/kandreys/Projects/Java/Lab3/LR5/src/main/java/org/suai/lab05/matrices/exceptions/MatrixDimensionMismatchException.java

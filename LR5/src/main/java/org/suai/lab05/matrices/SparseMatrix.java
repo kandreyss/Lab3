@@ -3,7 +3,7 @@ package org.suai.lab05.matrices;
 import java.util.ListIterator;
 import java.util.LinkedList;
 
-public class SparceMatrix extends AbstractMatrix {
+public class SparseMatrix extends AbstractMatrix {
 
     private static class Element {
         private int row;
@@ -33,7 +33,7 @@ public class SparceMatrix extends AbstractMatrix {
     private int columns;
     private LinkedList<Element> list;
 
-    public SparceMatrix(int rows, int columns) {
+    public SparseMatrix(int rows, int columns) {
         list = new LinkedList<Element>();
         this.rows = rows;
         this.columns = columns;
@@ -66,7 +66,7 @@ public class SparceMatrix extends AbstractMatrix {
 
     @Override
     protected IMatrix createInstance(int rows, int columns) {
-        return new SparceMatrix(rows, columns);
+        return new SparseMatrix(rows, columns);
     }
 
     @Override

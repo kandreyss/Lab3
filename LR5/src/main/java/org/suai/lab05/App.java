@@ -3,7 +3,7 @@ package org.suai.lab05;
 import java.util.Random;
 
 import org.suai.lab05.matrices.IMatrix;
-import org.suai.lab05.matrices.SparceMatrix;
+import org.suai.lab05.matrices.SparseMatrix;
 import org.suai.lab05.matrices.SquareMatrix;
 import org.suai.lab05.matrices.UsualMatrix;
 
@@ -128,7 +128,7 @@ public class App {
     }
     
     private static IMatrix createSparceMatrix(int rows, int cols, Random rand, double density) {
-        IMatrix matrix = new SparceMatrix(rows, cols);
+        IMatrix matrix = new SparseMatrix(rows, cols);
         int elements = (int)(rows * cols * density);
         for (int n = 0; n < elements; n++) {
             int i = rand.nextInt(rows);
