@@ -1,7 +1,8 @@
-*.class
 LR1
 LR2
 LR3
 LR4
 **/target/
 **/out/
+LR7/settings.bin
+LR7/settings.txt
