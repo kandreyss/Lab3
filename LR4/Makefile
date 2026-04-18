@@ -8,7 +8,9 @@ build:
 	javac -d out $(SRC)
 
 run:
-	java -cp out $(MAIN_CLASS)
+	@mkdir -p out
+	@javac -d out $(SRC)
+	@java -cp out $(MAIN_CLASS)
 
 test:
 	java -cp out $(TEST_CLASS)

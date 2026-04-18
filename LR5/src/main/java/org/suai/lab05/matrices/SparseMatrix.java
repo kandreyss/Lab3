@@ -6,35 +6,36 @@ import java.util.LinkedList;
 public class SparseMatrix extends AbstractMatrix {
 
     private static class Element {
-        private int row;
-        private int column;
+
+        private final int row;
+        private final int column;
         private double value;
 
-        public Element(int row, int column, double value) {
+        private Element(int row, int column, double value) {
             this.row = row;
             this.column = column;
             this.value = value;
         }
 
-        public int getRow() {
+        public int row() {
             return row;
         }
 
-        public int getColumn() {
+        public int column() {
             return column;
         }
 
-        public double getValue() {
+        public double value() {
             return value;
         }
     }
 
-    private int rows;
-    private int columns;
-    private LinkedList<Element> list;
+    private final int rows;
+    private final int columns;
+    private final LinkedList<Element> list;
 
     public SparseMatrix(int rows, int columns) {
-        list = new LinkedList<Element>();
+        list = new LinkedList<>();
         this.rows = rows;
         this.columns = columns;
     } 
@@ -51,13 +52,9 @@ public class SparseMatrix extends AbstractMatrix {
 
     @Override
     public double getElement(int row, int column) {
-        ListIterator<Element> it = list.listIterator();
-
-        while(it.hasNext()) {
-            Element e = it.next();
-
-            if(e.getRow() == row && e.getColumn() == column) {
-                return e.getValue();
+        for (Element e : list) {
+            if (e.row() == row && e.column() == column) {
+                return e.value();
             }
         }
 

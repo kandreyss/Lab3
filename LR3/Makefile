@@ -7,7 +7,9 @@ build:
 	javac -d $(OUT) $(JAVA_FILES)
 
 run:
-	java -cp $(OUT) $(MAIN_CLASS)
+	@rm -rf $(OUT)
+	@javac -d $(OUT) $(JAVA_FILES)
+	@java -cp $(OUT) $(MAIN_CLASS)
 
 clean:
 	rm -rf $(OUT)

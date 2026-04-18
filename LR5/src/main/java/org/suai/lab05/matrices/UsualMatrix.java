@@ -2,8 +2,8 @@ package org.suai.lab05.matrices;
 
 public class UsualMatrix extends AbstractMatrix {
     private final double[][] matrix;
-    private int rows;
-    private int columns;
+    private final int rows;
+    private final int columns;
 
     public UsualMatrix(int rows, int columns) {
         if (rows <= 0 || columns <= 0) {

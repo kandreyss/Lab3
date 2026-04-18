@@ -1,22 +1,26 @@
 package org.suai.lab06.input;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.io.*;
+import java.util.*;
 
 public class FormattedInput {
 
     private enum State {
-        TEXT, PERCENT
+        TEXT,
+        PERCENT
     }
 
     public static Object[] scanf(String format) throws IOException {
-        return internalScanf(new BufferedReader(new InputStreamReader(System.in)), format);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+        while (true) {
+            try {
+                return internalScanf(reader, format);
+            } catch (RuntimeException e) {
+                System.err.println(e.getMessage());
+                System.err.println("Invalid input. Please try again:");
+            }
+        }
     }
 
     public static Object[] sscanf(String in, String format) throws IOException {
@@ -28,105 +32,110 @@ public class FormattedInput {
         State state = State.TEXT;
 
         for (int i = 0; i < format.length(); i++) {
-            char formatChar = format.charAt(i);
+            char c = format.charAt(i);
 
-            if (state == State.TEXT) {
-                if (formatChar == '%') {
-                    state = State.PERCENT;
-                } else if (Character.isWhitespace(formatChar)) {
-                    skipWhitespace(reader);
-                } else {
-                    int inputChar = reader.read();
-                    if (inputChar == -1) {
-                        throw new NoSuchElementException(
-                            "Неожиданный конец ввода. Ожидалось: '" + formatChar + "'" + " на позиции: " + i
-                        );
+            switch (state) {
+                case TEXT:
+                    if (c == '%') {
+                        state = State.PERCENT;
+                    } else if (Character.isWhitespace(c)) {
+                        skipWhitespace(reader);
+                    } else {
+                        checkChar(reader, c, i);
                     }
-                    if ((char) inputChar != formatChar) {
-                        throw new InputMismatchException(
-                            "Ожидалось: '" + formatChar + "', получено: '" + (char) inputChar + "'" + "'" + " на позиции: " + i
-                        );
+                    break;
+
+                case PERCENT:
+                    Object value = parse(reader, c);
+                    if (value != null) {
+                        result.add(value);
                     }
-                }
-            } else {
-                String token = "";
-                try {
-                    switch (formatChar) {
-                        case 'd' -> {
-                            token = readToken(reader);
-                            result.add(Integer.parseInt(token));
-                        }
-                        case 'f' -> {
-                            token = readToken(reader);
-                            result.add(Double.parseDouble(token));
-                        }
-                        case 's' -> result.add(readToken(reader));
-                        case 'c' -> {
-                            int c = reader.read();
-                            if (c == -1) throw new NoSuchElementException("Неожиданный конец ввода при чтении %c");
-                            result.add((char) c);
-                        }
-                        case '%' -> {
-                            int p = reader.read();
-                            if (p != '%') throw new InputMismatchException(
-                                "Ожидался символ '%', получено: '" + (char) p + "'"
-                            );
-                        }
-                        default -> throw new IllegalArgumentException(
-                            "Неизвестный спецификатор формата: %" + formatChar
-                        );
-                    }
-                } catch (NumberFormatException e) {
-                    throw new InputMismatchException(
-                        "Не удалось преобразовать '" + token + "' для спецификатора %" + formatChar
-                    );
-                }
-                state = State.TEXT;
+                    state = State.TEXT;
+                    break;
             }
         }
 
         return result.toArray();
     }
 
+    private static Object parse(BufferedReader reader, char fmt) throws IOException {
+        try {
+            switch (fmt) {
+                case 'd':
+                    return Integer.parseInt(readToken(reader));
+                case 'f':
+                    return Double.parseDouble(readToken(reader));
+                case 's':
+                    return readToken(reader);
+                case 'c': {
+                    int c = reader.read();
+                    if (c == -1) {
+                        throw new NoSuchElementException("Unexpected end for %c");
+                    }
+                    return (char) c;
+                }
+                case 'x' : {
+                    return Integer.parseInt(readToken(reader), 16);
+                }
+                case 'b' : {
+                    return Integer.parseInt(readToken(reader), 2);
+                }
+                case '%': {
+                    int c = reader.read();
+                    if (c != '%') {
+                        throw new InputMismatchException("Expected '%'");
+                    }
+                    return null;
+                }
+                default:
+                    throw new IllegalArgumentException("Unknown specifier %" + fmt);
+            }
+        } catch (NumberFormatException e) {
+            throw new InputMismatchException("Invalid token for %" + fmt);
+        }
+    }
+
+    private static void checkChar(BufferedReader reader, char expected, int pos) throws IOException {
+        int c = reader.read();
+        if (c == -1) {
+            throw new NoSuchElementException("Unexpected end at pos " + pos);
+        }
+        if ((char) c != expected) {
+            throw new InputMismatchException(
+                    "Expected '" + expected + "', got '" + (char) c + "'"
+            );
+        }
+    }
+
     private static String readToken(BufferedReader reader) throws IOException {
         skipWhitespace(reader);
-        StringBuilder sb = new StringBuilder();
 
-        while (true) {
-            reader.mark(1);
-            int c = reader.read();
-            if (c == -1 || Character.isWhitespace((char) c)) {
-                if (c != -1) reader.reset();
-                break;
-            }
+        StringBuilder sb = new StringBuilder();
+        reader.mark(1);
+
+        int c;
+        while ((c = reader.read()) != -1 && !Character.isWhitespace(c)) {
             sb.append((char) c);
+            reader.mark(1);
         }
 
+        reader.reset();
+
         if (sb.isEmpty()) {
-            throw new NoSuchElementException("Не найдено данных для чтения токена.");
+            throw new NoSuchElementException("No token");
         }
 
         return sb.toString();
     }
 
     private static void skipWhitespace(BufferedReader reader) throws IOException {
-        while (true) {
-            reader.mark(1);
-            int c = reader.read();
-            if (c == -1 || !Character.isWhitespace((char) c)) {
-                if (c != -1) reader.reset();
-                break;
-            }
-        }
-    }
+        reader.mark(1);
 
-    public static void main(String[] args) {
-        try {
-            System.out.println("Введите строку и число (например: hello 42):");
-            Object[] elements = FormattedInput.scanf("%s %d");
-            System.out.println("Прочитано: " + elements[0] + " и " + elements[1]);
-        } catch (IOException e) {
-            e.printStackTrace();
+        int c;
+        while ((c = reader.read()) != -1 && Character.isWhitespace(c)) {
+            reader.mark(1);
         }
+
+        reader.reset();
     }
 }
