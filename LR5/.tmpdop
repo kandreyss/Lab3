@@ -1,0 +1,11 @@
+        long start = System.currentTimeMillis();
+        SparseMatrixTree smt = new SparseMatrixTree(100, 100);
+        fillMatrix(smt, rnd, false);
+        long end = System.currentTimeMillis();
+        System.out.println("SparseMatrixTree(100x100) was created: " + (end - start) + " ms");
+
+        start = System.currentTimeMillis();
+        SparseMatrix sp = new SparseMatrix(100, 100);
+        fillMatrix(sp, rnd, false);
+        end = System.currentTimeMillis();
+        System.out.println("SparseMatrix(100x100) was created: " + (end - start) + " ms");

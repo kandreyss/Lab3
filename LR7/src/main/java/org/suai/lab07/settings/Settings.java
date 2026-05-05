@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class Settings {
 
     private final HashMap<String, Integer> map;
@@ -23,6 +24,9 @@ public class Settings {
     }
 
     public Integer put(String name, int value) {
+        if (value < -128 ||  value > 127) {
+            throw new IllegalArgumentException("Value must be one byte!");
+        }
         return map.put(name, value);
     }
 
@@ -38,7 +42,7 @@ public class Settings {
         int counter = 0;
         try (DataInputStream dis = new DataInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
             while (dis.available() > 0) {
-                map.put(dis.readUTF(), dis.readInt());
+                map.put(dis.readUTF(), (int) dis.read());
                 counter++;
             }
         }
