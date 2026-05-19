@@ -7,21 +7,21 @@ import java.util.Random;
 
 public class Main {
 
-    public static void main(String[] args) {
+    static void main() {
 
         Random rnd = new Random();
 
-        int rows1 = 100 + rnd.nextInt(200);
-        int cols1 = 100 + rnd.nextInt(200);
+        int rows1 = 500 + rnd.nextInt(200);
+        int cols1 = 500 + rnd.nextInt(200);
         UsualMatrix m1 = new UsualMatrix(rows1, cols1);
         fillMatrix(m1, rnd);
 
         int rows2 = cols1;
-        int cols2 = 100 + rnd.nextInt(200);
+        int cols2 = 500 + rnd.nextInt(200);
         UsualMatrix m2 = new UsualMatrix(rows2, cols2);
         fillMatrix(m2, rnd);
 
-        int threadsCount = 10;
+        int threadsCount = 1;
         ParallelMatrixProduct pm = new ParallelMatrixProduct(threadsCount);
 
         long startParallel = System.currentTimeMillis();
